@@ -35,6 +35,7 @@ public class VideoStreamActivity extends AppCompatActivity {
         etMessage = findViewById(R.id.etMessage);
         btnSend = findViewById(R.id.btnSend);
         Button btnConnect = findViewById(R.id.btnConnect);
+
         btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
