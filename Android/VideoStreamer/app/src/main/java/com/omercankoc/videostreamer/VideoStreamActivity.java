@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,45 +17,14 @@ import java.net.Socket;
 
 public class VideoStreamActivity extends AppCompatActivity {
 
-    Thread Thread1 = null;
-    EditText etIP, etPort;
-    TextView tvMessages;
-    EditText etMessage;
-    Button btnSend;
-    String SERVER_IP;
-    int SERVER_PORT;
-
+    Thread thread1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_stream);
 
-        etIP = findViewById(R.id.etIP);
-        etPort = findViewById(R.id.etPort);
-        tvMessages = findViewById(R.id.tvMessages);
-        etMessage = findViewById(R.id.etMessage);
-        btnSend = findViewById(R.id.btnSend);
-        Button btnConnect = findViewById(R.id.btnConnect);
-
-        btnConnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvMessages.setText("");
-                SERVER_IP = etIP.getText().toString().trim();
-                SERVER_PORT = Integer.parseInt(etPort.getText().toString().trim());
-                Thread1 = new Thread(new Thread1());
-                Thread1.start();
-            }
-        });
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message = etMessage.getText().toString().trim();
-                if (!message.isEmpty()) {
-                    new Thread(new Thread3(message)).start();
-                }
-            }
-        });
+        thread1 = new Thread(new Thread1());
+        thread1.start();
     }
 
     private PrintWriter output;
@@ -64,13 +34,13 @@ public class VideoStreamActivity extends AppCompatActivity {
         public void run() {
             Socket socket;
             try {
-                socket = new Socket(SERVER_IP, SERVER_PORT);
+                socket = new Socket("172.24.1.1", 8080);
                 output = new PrintWriter(socket.getOutputStream());
                 input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        tvMessages.setText("Connected\n");
+                        Toast.makeText(getApplicationContext(),"Connected!",Toast.LENGTH_LONG).show();
                     }
                 });
                 new Thread(new Thread2()).start();
@@ -89,37 +59,18 @@ public class VideoStreamActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                //tvMessages.append("server: " + message + "\n");
                                 System.out.println(message);
                             }
                         });
                     } else {
-                        Thread1 = new Thread(new Thread1());
-                        Thread1.start();
+                        thread1 = new Thread(new Thread1());
+                        thread1.start();
                         return;
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-        }
-    }
-    class Thread3 implements Runnable {
-        private String message;
-        Thread3(String message) {
-            this.message = message;
-        }
-        @Override
-        public void run() {
-            output.write(message);
-            output.flush();
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    tvMessages.append("client: " + message + "\n");
-                    etMessage.setText("");
-                }
-            });
         }
     }
 }
