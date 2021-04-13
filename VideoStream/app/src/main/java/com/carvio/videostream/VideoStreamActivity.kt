@@ -2,11 +2,15 @@ package com.carvio.videostream
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import io.ktor.network.selector.*
+import io.ktor.network.sockets.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import java.io.IOException
-import java.net.Socket
+import java.net.InetSocketAddress
 import java.util.*
 
 class VideoStreamActivity : AppCompatActivity() {
@@ -14,22 +18,16 @@ class VideoStreamActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_stream)
 
-        CoroutineScope(IO).async { videoStream() }
-    }
-
-    private suspend fun videoStream(){
-
         try {
-            val socket = Socket("172.24.1.1",8080)
-            val writer = socket.getOutputStream()
-            val scanner = Scanner(socket.getInputStream())
-            println(scanner.nextLine())
-            scanner.close()
-            writer.close()
-            socket.close()
+            val socket = aSocket(ActorSelectorManager(Dispatchers.IO)).tcp().connect(InetSocketAddress("172.24.1.1", 554))
+            val input = socket.openReadChannel()
+
+            val response = input.readByte()
+            println("Server said: '$response'")
         } catch (e : IOException){
             e.printStackTrace()
             println("CONNECTION LOST!")
         }
+
     }
 }
