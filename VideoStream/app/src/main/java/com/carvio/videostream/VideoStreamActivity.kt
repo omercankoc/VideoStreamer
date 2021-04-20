@@ -28,7 +28,6 @@ class VideoStreamActivity : AppCompatActivity() {
                     var inputStreamReader : InputStreamReader = InputStreamReader(socket.getInputStream())
                     var bufferedReader : BufferedReader = BufferedReader(inputStreamReader)
                     var stream = bufferedReader.read()
-                    stream = stream.decode()
                     print(stream)
 
                 }
