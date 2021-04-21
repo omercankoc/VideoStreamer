@@ -4,14 +4,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.ktor.network.selector.*
 import io.ktor.network.sockets.*
-import io.ktor.util.*
 import io.ktor.util.Identity.decode
-import io.ktor.util.cio.*
 import io.ktor.utils.io.*
 import kotlinx.coroutines.*
 import java.io.*
 import java.net.Socket
-import java.util.*
 
 
 class VideoStreamActivity : AppCompatActivity() {
@@ -23,15 +20,16 @@ class VideoStreamActivity : AppCompatActivity() {
 
         GlobalScope.async {
             try {
-                var socket : Socket = Socket("172.24.1.1", 8080)
+
+                var socket = Socket("172.24.1.1", 8080)
+                var inputStreamReader : InputStreamReader = InputStreamReader(socket.getInputStream())
+                var bufferedReader : BufferedReader = BufferedReader(inputStreamReader)
+
                 while (true){
-                    var inputStreamReader : InputStreamReader = InputStreamReader(socket.getInputStream())
-                    var bufferedReader : BufferedReader = BufferedReader(inputStreamReader)
-                    var stream = bufferedReader.read()
-                    print(stream)
-
+                    var stream : String = bufferedReader.readLine()
+                    println(stream)
                 }
-
+                
             } catch (e: IOException){
                 e.printStackTrace()
             }
