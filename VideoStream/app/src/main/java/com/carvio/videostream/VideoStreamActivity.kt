@@ -1,14 +1,19 @@
 package com.carvio.videostream
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import io.ktor.network.selector.*
 import io.ktor.network.sockets.*
 import io.ktor.util.Identity.decode
 import io.ktor.utils.io.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import java.io.*
 import java.net.Socket
+import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
+import java.util.*
 
 
 class VideoStreamActivity : AppCompatActivity() {
@@ -16,23 +21,27 @@ class VideoStreamActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_stream)
 
-        var frame = ByteArray(5000000)
+        var frame = String()
 
         GlobalScope.async {
             try {
 
-                var socket = Socket("172.24.1.1", 8080)
-                var inputStreamReader : InputStreamReader = InputStreamReader(socket.getInputStream())
-                var bufferedReader : BufferedReader = BufferedReader(inputStreamReader)
+                val socket = Socket("172.24.1.1", 8080)
+                var inputStreamReader : InputStreamReader = InputStreamReader(socket.getInputStream(),StandardCharsets.UTF_8)
+                var bufferedReader : BufferedReader = BufferedReader(inputStreamReader,)
+                //val reader = Scanner(socket.getInputStream(),"UTF-8")
 
                 while (true){
-                    var stream : String = bufferedReader.readLine()
-                    println(stream)
+
+                    var stream = bufferedReader.readLine()
                 }
-                
+
             } catch (e: IOException){
                 e.printStackTrace()
             }
         }
+    }
+    companion object {
+        val TAG = VideoStreamActivity::class.simpleName
     }
 }
