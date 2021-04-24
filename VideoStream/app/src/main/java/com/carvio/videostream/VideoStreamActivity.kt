@@ -21,6 +21,12 @@ class VideoStreamActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_stream)
 
+        // UTF8
+        // SETTER FRAME ARRAY
+        // FIND
+        // CREATE FRAME
+        // IMDECODE
+
         var frame = String()
 
         GlobalScope.async {
