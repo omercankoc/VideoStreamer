@@ -35,7 +35,6 @@ class VideoStreamActivity : AppCompatActivity() {
                 val socket = Socket("172.24.1.1", 8080)
                 var inputStreamReader : InputStreamReader = InputStreamReader(socket.getInputStream(),StandardCharsets.UTF_8)
                 var bufferedReader : BufferedReader = BufferedReader(inputStreamReader,)
-                //val reader = Scanner(socket.getInputStream(),"UTF-8")
 
                 while (true){
 
