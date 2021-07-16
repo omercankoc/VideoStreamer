@@ -20,13 +20,13 @@ class RecycleViewAdapter(private val languageList : ArrayList<Languages>) : Recy
 
     class LanguageHolder(val binding : RecyclerRowBinding) : RecyclerView.ViewHolder(binding.root) { }
 
-    // View holder ile olusturuldugunda yurut. Layout ile bagla.
+    // View holder ile olusturuldugunda yurut. (Layout ile bagla.)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LanguageHolder {
         val binding = RecyclerRowBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return LanguageHolder(binding)
     }
 
-    // Baglandiktan sonra yurut. Data-View baglantisi.
+    // Baglandiktan sonra yurut. (Data-View baglantisi.)
     override fun onBindViewHolder(holder: LanguageHolder, position: Int) {
         holder.binding.textViewRecycleItem.text = languageList[position].language
         holder.itemView.setOnClickListener {
