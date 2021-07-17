@@ -8,13 +8,13 @@ class Languages(
     val logo : Int) : Serializable {
 }
 ```
-### and Singleton
+### and Singleton Class
 ```kotlin
 object Singleton {
     var chosenLanguage : Languages? = null
 }
 ```
-### Recycle View Adapter 
+### Recycle View Adapter Class
 ```kotlin
 class RecycleViewAdapter(private val languageList : ArrayList<Languages>) : RecyclerView.Adapter<RecycleViewAdapter.LanguageHolder>() {
 
